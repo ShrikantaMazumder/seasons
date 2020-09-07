@@ -1,17 +1,48 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import SeasonDisplay from './SeasonDisplay';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+class App extends React.Component {
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+    constructor(props){
+
+        // this method extend all features of Parent class
+        super(props);
+
+        // Declaring State
+        this.state = {
+            lat: null,
+            errorMsg: ''
+        };
+
+        // Call this when App component call
+        window.navigator.geolocation.getCurrentPosition(
+            position => {
+                this.setState({ lat: position.coords.latitude})
+            },
+            err => this.setState({ errorMsg: err.message})
+        );
+    }
+    // Must define render for class based components.
+    render(){
+        
+        return (
+            <div>
+                {
+                    this.state.lat ? 
+                    <h1>Latitude: {this.state.lat}</h1>
+                    :
+                    <h1>{this.state.errorMsg}</h1>
+                }
+                {
+                    !this.state.lat && !this.state.errorMsg 
+                    ? 
+                    <h2>Loading</h2> 
+                    : ''
+                }
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
