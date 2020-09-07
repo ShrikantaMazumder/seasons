@@ -3,23 +3,14 @@ import ReactDOM from 'react-dom';
 import SeasonDisplay from './SeasonDisplay';
 
 class App extends React.Component {
+    state = {
+        lat: null,
+        errorMsg: ''
+    }
 
-    constructor(props){
-
-        // this method extend all features of Parent class
-        super(props);
-
-        // Declaring State
-        this.state = {
-            lat: null,
-            errorMsg: ''
-        };
-
-        // Call this when App component call
+    componentDidMount() {
         window.navigator.geolocation.getCurrentPosition(
-            position => {
-                this.setState({ lat: position.coords.latitude})
-            },
+            position => this.setState({ lat: position.coords.latitude}),
             err => this.setState({ errorMsg: err.message})
         );
     }
@@ -30,7 +21,7 @@ class App extends React.Component {
             <div>
                 {
                     this.state.lat ? 
-                    <h1>Latitude: {this.state.lat}</h1>
+                    <SeasonDisplay lat={this.state.lat} />
                     :
                     <h1>{this.state.errorMsg}</h1>
                 }
